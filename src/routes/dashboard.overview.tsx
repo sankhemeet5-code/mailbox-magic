@@ -5,16 +5,41 @@ import { useAuth } from "@/lib/auth-context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Send, Clock, FileEdit, AlertCircle, Megaphone, Activity } from "lucide-react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell, Legend } from "recharts";
+import {
+  LineChart,
+  Line,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+} from "recharts";
 
 export const Route = createFileRoute("/dashboard/overview")({
   component: Overview,
 });
 
 interface EmailRow {
-  id: string; to_email: string; subject: string; status: string; sent_at: string | null; created_at: string; campaign_id: string | null;
+  id: string;
+  to_email: string;
+  subject: string;
+  status: string;
+  sent_at: string | null;
+  created_at: string;
+  campaign_id: string | null;
 }
 
 function Overview() {
@@ -26,13 +51,19 @@ function Overview() {
     if (!user) return;
     (async () => {
       const [{ data: e }, { data: c }] = await Promise.all([
-        supabase.from("emails").select("id,to_email,subject,status,sent_at,created_at,campaign_id").order("created_at", { ascending: false }).limit(200),
+        supabase
+          .from("emails")
+          .select("id,to_email,subject,status,sent_at,created_at,campaign_id")
+          .order("created_at", { ascending: false })
+          .limit(200),
         supabase.from("campaigns").select("id,status"),
       ]);
       setEmails((e ?? []) as EmailRow[]);
       setCampaignsCount({
         total: c?.length ?? 0,
-        active: (c ?? []).filter((x: { status: string }) => x.status === "running" || x.status === "scheduled").length,
+        active: (c ?? []).filter(
+          (x: { status: string }) => x.status === "running" || x.status === "scheduled",
+        ).length,
       });
     })();
   }, [user]);
@@ -41,7 +72,11 @@ function Overview() {
     return (
       <div className="space-y-4">
         <Skeleton className="h-9 w-48" />
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-3">{Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-24" />)}</div>
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-24" />
+          ))}
+        </div>
         <Skeleton className="h-64" />
       </div>
     );
@@ -104,7 +139,9 @@ function Overview() {
 
       <div className="grid lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2">
-          <CardHeader><CardTitle className="text-base">Sent emails — last 30 days</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="text-base">Sent emails — last 30 days</CardTitle>
+          </CardHeader>
           <CardContent className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={days}>
@@ -112,18 +149,35 @@ function Overview() {
                 <XAxis dataKey="day" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
                 <Tooltip />
-                <Line type="monotone" dataKey="sent" stroke="oklch(0.55 0.22 265)" strokeWidth={2} dot={false} />
+                <Line
+                  type="monotone"
+                  dataKey="sent"
+                  stroke="oklch(0.55 0.22 265)"
+                  strokeWidth={2}
+                  dot={false}
+                />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader><CardTitle className="text-base">Status breakdown</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="text-base">Status breakdown</CardTitle>
+          </CardHeader>
           <CardContent className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={donut} dataKey="value" nameKey="name" innerRadius={50} outerRadius={80} paddingAngle={2}>
-                  {donut.map((d, i) => <Cell key={i} fill={d.color} />)}
+                <Pie
+                  data={donut}
+                  dataKey="value"
+                  nameKey="name"
+                  innerRadius={50}
+                  outerRadius={80}
+                  paddingAngle={2}
+                >
+                  {donut.map((d, i) => (
+                    <Cell key={i} fill={d.color} />
+                  ))}
                 </Pie>
                 <Legend />
               </PieChart>
@@ -133,23 +187,38 @@ function Overview() {
       </div>
 
       <Card>
-        <CardHeader><CardTitle className="text-base">Recent emails</CardTitle></CardHeader>
+        <CardHeader>
+          <CardTitle className="text-base">Recent emails</CardTitle>
+        </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
-              <TableRow><TableHead>To</TableHead><TableHead>Subject</TableHead><TableHead>Status</TableHead><TableHead>Sent</TableHead></TableRow>
+              <TableRow>
+                <TableHead>To</TableHead>
+                <TableHead>Subject</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Sent</TableHead>
+              </TableRow>
             </TableHeader>
             <TableBody>
               {emails.slice(0, 10).map((e) => (
                 <TableRow key={e.id}>
                   <TableCell className="font-medium">{e.to_email}</TableCell>
                   <TableCell className="max-w-xs truncate">{e.subject}</TableCell>
-                  <TableCell><StatusBadge status={e.status} /></TableCell>
-                  <TableCell className="text-muted-foreground text-sm">{e.sent_at ? new Date(e.sent_at).toLocaleString() : "—"}</TableCell>
+                  <TableCell>
+                    <StatusBadge status={e.status} />
+                  </TableCell>
+                  <TableCell className="text-muted-foreground text-sm">
+                    {e.sent_at ? new Date(e.sent_at).toLocaleString() : "—"}
+                  </TableCell>
                 </TableRow>
               ))}
               {emails.length === 0 && (
-                <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground py-8">No emails yet. Send your first!</TableCell></TableRow>
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
+                    No emails yet. Send your first!
+                  </TableCell>
+                </TableRow>
               )}
             </TableBody>
           </Table>
@@ -166,5 +235,9 @@ function StatusBadge({ status }: { status: string }) {
     failed: "bg-destructive/15 text-destructive border-destructive/20",
     draft: "bg-muted text-muted-foreground",
   };
-  return <Badge variant="outline" className={variants[status] ?? ""}>{status}</Badge>;
+  return (
+    <Badge variant="outline" className={variants[status] ?? ""}>
+      {status}
+    </Badge>
+  );
 }

@@ -32,7 +32,11 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "MailFlow — Bulk Mail & Campaign Manager" },
-      { name: "description", content: "Send, schedule and analyze bulk email campaigns with templates, SMTP, and powerful analytics." },
+      {
+        name: "description",
+        content:
+          "Send, schedule and analyze bulk email campaigns with templates, SMTP, and powerful analytics.",
+      },
       { name: "author", content: "Lovable" },
       { property: "og:title", content: "MailFlow — Bulk Mail & Campaign Manager" },
       { property: "og:description", content: "Send, schedule and analyze bulk email campaigns." },

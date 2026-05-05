@@ -11,7 +11,9 @@ export const Route = createFileRoute("/unauthorized")({
         </div>
         <h1 className="text-2xl font-bold">Unauthorized</h1>
         <p className="text-muted-foreground mt-2">You don't have permission to access this page.</p>
-        <Button asChild className="mt-6"><Link to="/">Go home</Link></Button>
+        <Button asChild className="mt-6">
+          <Link to="/">Go home</Link>
+        </Button>
       </div>
     </div>
   ),

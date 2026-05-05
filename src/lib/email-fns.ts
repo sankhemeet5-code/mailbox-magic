@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { encrypt, decrypt } from "@/lib/crypto";
 import nodemailer from "nodemailer";
 
 const sendSchema = z.object({
@@ -86,33 +87,9 @@ export const sendEmailNow = createServerFn({ method: "POST" })
     }
   });
 
-// Lightweight reversible encoding for SMTP passwords using ENCRYPTION_KEY env var.
-// (Server-side only; uses crypto AES-256-GCM.)
-import { createCipheriv, createDecipheriv, createHash, randomBytes } from "crypto";
-
-function getKey() {
-  const k =
-    process.env.ENCRYPTION_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "fallback-dev-key";
-  return createHash("sha256").update(k).digest();
-}
-
-export function encrypt(plain: string): string {
-  const iv = randomBytes(12);
-  const cipher = createCipheriv("aes-256-gcm", getKey(), iv);
-  const enc = Buffer.concat([cipher.update(plain, "utf8"), cipher.final()]);
-  const tag = cipher.getAuthTag();
-  return [iv.toString("base64"), tag.toString("base64"), enc.toString("base64")].join(":");
-}
-
-export function decrypt(payload: string): string {
-  const [ivB, tagB, dataB] = payload.split(":");
-  const decipher = createDecipheriv("aes-256-gcm", getKey(), Buffer.from(ivB, "base64"));
-  decipher.setAuthTag(Buffer.from(tagB, "base64"));
-  const dec = Buffer.concat([decipher.update(Buffer.from(dataB, "base64")), decipher.final()]);
-  return dec.toString("utf8");
-}
-
 export const encryptSmtpPassword = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => z.object({ password: z.string().min(1) }).parse(input))
-  .handler(async ({ data }) => ({ encrypted: encrypt(data.password) }));
+  .handler(async ({ data }) => ({
+    encrypted: encrypt(data.password),
+  }));
