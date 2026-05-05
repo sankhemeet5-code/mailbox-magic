@@ -15,11 +15,17 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardTemplatesRouteImport } from './routes/dashboard.templates'
 import { Route as DashboardOverviewRouteImport } from './routes/dashboard.overview'
+import { Route as DashboardCampaignsRouteImport } from './routes/dashboard.campaigns'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminSmtpRouteImport } from './routes/admin.smtp'
+import { Route as AdminCampaignsRouteImport } from './routes/admin.campaigns'
+import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as DashboardTemplatesNewRouteImport } from './routes/dashboard.templates.new'
 import { Route as DashboardTemplatesIdRouteImport } from './routes/dashboard.templates.$id'
 import { Route as DashboardEmailsNewRouteImport } from './routes/dashboard.emails.new'
+import { Route as DashboardEmailsBulkRouteImport } from './routes/dashboard.emails.bulk'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
   id: '/unauthorized',
@@ -51,6 +57,11 @@ const DashboardOverviewRoute = DashboardOverviewRouteImport.update({
   path: '/overview',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardCampaignsRoute = DashboardCampaignsRouteImport.update({
+  id: '/campaigns',
+  path: '/campaigns',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/auth/register',
   path: '/auth/register',
@@ -60,6 +71,26 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/auth/login',
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSmtpRoute = AdminSmtpRouteImport.update({
+  id: '/smtp',
+  path: '/smtp',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCampaignsRoute = AdminCampaignsRouteImport.update({
+  id: '/campaigns',
+  path: '/campaigns',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AdminRoute,
 } as any)
 const DashboardTemplatesNewRoute = DashboardTemplatesNewRouteImport.update({
   id: '/new',
@@ -76,29 +107,46 @@ const DashboardEmailsNewRoute = DashboardEmailsNewRouteImport.update({
   path: '/emails/new',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardEmailsBulkRoute = DashboardEmailsBulkRouteImport.update({
+  id: '/emails/bulk',
+  path: '/emails/bulk',
+  getParentRoute: () => DashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/dashboard': typeof DashboardRouteWithChildren
   '/unauthorized': typeof UnauthorizedRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/campaigns': typeof AdminCampaignsRoute
+  '/admin/smtp': typeof AdminSmtpRoute
+  '/admin/users': typeof AdminUsersRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/dashboard/campaigns': typeof DashboardCampaignsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
   '/dashboard/templates': typeof DashboardTemplatesRouteWithChildren
+  '/dashboard/emails/bulk': typeof DashboardEmailsBulkRoute
   '/dashboard/emails/new': typeof DashboardEmailsNewRoute
   '/dashboard/templates/$id': typeof DashboardTemplatesIdRoute
   '/dashboard/templates/new': typeof DashboardTemplatesNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/dashboard': typeof DashboardRouteWithChildren
   '/unauthorized': typeof UnauthorizedRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/campaigns': typeof AdminCampaignsRoute
+  '/admin/smtp': typeof AdminSmtpRoute
+  '/admin/users': typeof AdminUsersRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/dashboard/campaigns': typeof DashboardCampaignsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
   '/dashboard/templates': typeof DashboardTemplatesRouteWithChildren
+  '/dashboard/emails/bulk': typeof DashboardEmailsBulkRoute
   '/dashboard/emails/new': typeof DashboardEmailsNewRoute
   '/dashboard/templates/$id': typeof DashboardTemplatesIdRoute
   '/dashboard/templates/new': typeof DashboardTemplatesNewRoute
@@ -106,13 +154,19 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/dashboard': typeof DashboardRouteWithChildren
   '/unauthorized': typeof UnauthorizedRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/campaigns': typeof AdminCampaignsRoute
+  '/admin/smtp': typeof AdminSmtpRoute
+  '/admin/users': typeof AdminUsersRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/dashboard/campaigns': typeof DashboardCampaignsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
   '/dashboard/templates': typeof DashboardTemplatesRouteWithChildren
+  '/dashboard/emails/bulk': typeof DashboardEmailsBulkRoute
   '/dashboard/emails/new': typeof DashboardEmailsNewRoute
   '/dashboard/templates/$id': typeof DashboardTemplatesIdRoute
   '/dashboard/templates/new': typeof DashboardTemplatesNewRoute
@@ -124,10 +178,16 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/unauthorized'
+    | '/admin/analytics'
+    | '/admin/campaigns'
+    | '/admin/smtp'
+    | '/admin/users'
     | '/auth/login'
     | '/auth/register'
+    | '/dashboard/campaigns'
     | '/dashboard/overview'
     | '/dashboard/templates'
+    | '/dashboard/emails/bulk'
     | '/dashboard/emails/new'
     | '/dashboard/templates/$id'
     | '/dashboard/templates/new'
@@ -137,10 +197,16 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/unauthorized'
+    | '/admin/analytics'
+    | '/admin/campaigns'
+    | '/admin/smtp'
+    | '/admin/users'
     | '/auth/login'
     | '/auth/register'
+    | '/dashboard/campaigns'
     | '/dashboard/overview'
     | '/dashboard/templates'
+    | '/dashboard/emails/bulk'
     | '/dashboard/emails/new'
     | '/dashboard/templates/$id'
     | '/dashboard/templates/new'
@@ -150,10 +216,16 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/unauthorized'
+    | '/admin/analytics'
+    | '/admin/campaigns'
+    | '/admin/smtp'
+    | '/admin/users'
     | '/auth/login'
     | '/auth/register'
+    | '/dashboard/campaigns'
     | '/dashboard/overview'
     | '/dashboard/templates'
+    | '/dashboard/emails/bulk'
     | '/dashboard/emails/new'
     | '/dashboard/templates/$id'
     | '/dashboard/templates/new'
@@ -161,7 +233,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   DashboardRoute: typeof DashboardRouteWithChildren
   UnauthorizedRoute: typeof UnauthorizedRoute
   AuthLoginRoute: typeof AuthLoginRoute
@@ -212,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardOverviewRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/campaigns': {
+      id: '/dashboard/campaigns'
+      path: '/campaigns'
+      fullPath: '/dashboard/campaigns'
+      preLoaderRoute: typeof DashboardCampaignsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/auth/register': {
       id: '/auth/register'
       path: '/auth/register'
@@ -225,6 +304,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/smtp': {
+      id: '/admin/smtp'
+      path: '/smtp'
+      fullPath: '/admin/smtp'
+      preLoaderRoute: typeof AdminSmtpRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/campaigns': {
+      id: '/admin/campaigns'
+      path: '/campaigns'
+      fullPath: '/admin/campaigns'
+      preLoaderRoute: typeof AdminCampaignsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analytics': {
+      id: '/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AdminAnalyticsRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/dashboard/templates/new': {
       id: '/dashboard/templates/new'
@@ -247,8 +354,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardEmailsNewRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/emails/bulk': {
+      id: '/dashboard/emails/bulk'
+      path: '/emails/bulk'
+      fullPath: '/dashboard/emails/bulk'
+      preLoaderRoute: typeof DashboardEmailsBulkRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
+
+interface AdminRouteChildren {
+  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminCampaignsRoute: typeof AdminCampaignsRoute
+  AdminSmtpRoute: typeof AdminSmtpRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminCampaignsRoute: AdminCampaignsRoute,
+  AdminSmtpRoute: AdminSmtpRoute,
+  AdminUsersRoute: AdminUsersRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface DashboardTemplatesRouteChildren {
   DashboardTemplatesIdRoute: typeof DashboardTemplatesIdRoute
@@ -264,14 +394,18 @@ const DashboardTemplatesRouteWithChildren =
   DashboardTemplatesRoute._addFileChildren(DashboardTemplatesRouteChildren)
 
 interface DashboardRouteChildren {
+  DashboardCampaignsRoute: typeof DashboardCampaignsRoute
   DashboardOverviewRoute: typeof DashboardOverviewRoute
   DashboardTemplatesRoute: typeof DashboardTemplatesRouteWithChildren
+  DashboardEmailsBulkRoute: typeof DashboardEmailsBulkRoute
   DashboardEmailsNewRoute: typeof DashboardEmailsNewRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardCampaignsRoute: DashboardCampaignsRoute,
   DashboardOverviewRoute: DashboardOverviewRoute,
   DashboardTemplatesRoute: DashboardTemplatesRouteWithChildren,
+  DashboardEmailsBulkRoute: DashboardEmailsBulkRoute,
   DashboardEmailsNewRoute: DashboardEmailsNewRoute,
 }
 
@@ -281,7 +415,7 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   DashboardRoute: DashboardRouteWithChildren,
   UnauthorizedRoute: UnauthorizedRoute,
   AuthLoginRoute: AuthLoginRoute,
