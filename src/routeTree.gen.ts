@@ -13,9 +13,12 @@ import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardTemplatesRouteImport } from './routes/dashboard.templates'
 import { Route as DashboardOverviewRouteImport } from './routes/dashboard.overview'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as DashboardTemplatesNewRouteImport } from './routes/dashboard.templates.new'
+import { Route as DashboardTemplatesIdRouteImport } from './routes/dashboard.templates.$id'
 import { Route as DashboardEmailsNewRouteImport } from './routes/dashboard.emails.new'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
@@ -38,6 +41,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardTemplatesRoute = DashboardTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardOverviewRoute = DashboardOverviewRouteImport.update({
   id: '/overview',
   path: '/overview',
@@ -53,6 +61,16 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardTemplatesNewRoute = DashboardTemplatesNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => DashboardTemplatesRoute,
+} as any)
+const DashboardTemplatesIdRoute = DashboardTemplatesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => DashboardTemplatesRoute,
+} as any)
 const DashboardEmailsNewRoute = DashboardEmailsNewRouteImport.update({
   id: '/emails/new',
   path: '/emails/new',
@@ -67,7 +85,10 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
+  '/dashboard/templates': typeof DashboardTemplatesRouteWithChildren
   '/dashboard/emails/new': typeof DashboardEmailsNewRoute
+  '/dashboard/templates/$id': typeof DashboardTemplatesIdRoute
+  '/dashboard/templates/new': typeof DashboardTemplatesNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -77,7 +98,10 @@ export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
+  '/dashboard/templates': typeof DashboardTemplatesRouteWithChildren
   '/dashboard/emails/new': typeof DashboardEmailsNewRoute
+  '/dashboard/templates/$id': typeof DashboardTemplatesIdRoute
+  '/dashboard/templates/new': typeof DashboardTemplatesNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -88,7 +112,10 @@ export interface FileRoutesById {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
+  '/dashboard/templates': typeof DashboardTemplatesRouteWithChildren
   '/dashboard/emails/new': typeof DashboardEmailsNewRoute
+  '/dashboard/templates/$id': typeof DashboardTemplatesIdRoute
+  '/dashboard/templates/new': typeof DashboardTemplatesNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -100,7 +127,10 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/dashboard/overview'
+    | '/dashboard/templates'
     | '/dashboard/emails/new'
+    | '/dashboard/templates/$id'
+    | '/dashboard/templates/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -110,7 +140,10 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/dashboard/overview'
+    | '/dashboard/templates'
     | '/dashboard/emails/new'
+    | '/dashboard/templates/$id'
+    | '/dashboard/templates/new'
   id:
     | '__root__'
     | '/'
@@ -120,7 +153,10 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/dashboard/overview'
+    | '/dashboard/templates'
     | '/dashboard/emails/new'
+    | '/dashboard/templates/$id'
+    | '/dashboard/templates/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -162,6 +198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/templates': {
+      id: '/dashboard/templates'
+      path: '/templates'
+      fullPath: '/dashboard/templates'
+      preLoaderRoute: typeof DashboardTemplatesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/overview': {
       id: '/dashboard/overview'
       path: '/overview'
@@ -183,6 +226,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/templates/new': {
+      id: '/dashboard/templates/new'
+      path: '/new'
+      fullPath: '/dashboard/templates/new'
+      preLoaderRoute: typeof DashboardTemplatesNewRouteImport
+      parentRoute: typeof DashboardTemplatesRoute
+    }
+    '/dashboard/templates/$id': {
+      id: '/dashboard/templates/$id'
+      path: '/$id'
+      fullPath: '/dashboard/templates/$id'
+      preLoaderRoute: typeof DashboardTemplatesIdRouteImport
+      parentRoute: typeof DashboardTemplatesRoute
+    }
     '/dashboard/emails/new': {
       id: '/dashboard/emails/new'
       path: '/emails/new'
@@ -193,13 +250,28 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface DashboardTemplatesRouteChildren {
+  DashboardTemplatesIdRoute: typeof DashboardTemplatesIdRoute
+  DashboardTemplatesNewRoute: typeof DashboardTemplatesNewRoute
+}
+
+const DashboardTemplatesRouteChildren: DashboardTemplatesRouteChildren = {
+  DashboardTemplatesIdRoute: DashboardTemplatesIdRoute,
+  DashboardTemplatesNewRoute: DashboardTemplatesNewRoute,
+}
+
+const DashboardTemplatesRouteWithChildren =
+  DashboardTemplatesRoute._addFileChildren(DashboardTemplatesRouteChildren)
+
 interface DashboardRouteChildren {
   DashboardOverviewRoute: typeof DashboardOverviewRoute
+  DashboardTemplatesRoute: typeof DashboardTemplatesRouteWithChildren
   DashboardEmailsNewRoute: typeof DashboardEmailsNewRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardOverviewRoute: DashboardOverviewRoute,
+  DashboardTemplatesRoute: DashboardTemplatesRouteWithChildren,
   DashboardEmailsNewRoute: DashboardEmailsNewRoute,
 }
 
