@@ -14,16 +14,353 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      campaigns: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          org_id: string
+          scheduled_at: string | null
+          status: Database["public"]["Enums"]["campaign_status"]
+          template_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          org_id: string
+          scheduled_at?: string | null
+          status?: Database["public"]["Enums"]["campaign_status"]
+          template_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          org_id?: string
+          scheduled_at?: string | null
+          status?: Database["public"]["Enums"]["campaign_status"]
+          template_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaigns_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaigns_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_logs: {
+        Row: {
+          created_at: string
+          email_id: string
+          event: Database["public"]["Enums"]["email_log_event"]
+          id: string
+          message: string | null
+        }
+        Insert: {
+          created_at?: string
+          email_id: string
+          event: Database["public"]["Enums"]["email_log_event"]
+          id?: string
+          message?: string | null
+        }
+        Update: {
+          created_at?: string
+          email_id?: string
+          event?: Database["public"]["Enums"]["email_log_event"]
+          id?: string
+          message?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_logs_email_id_fkey"
+            columns: ["email_id"]
+            isOneToOne: false
+            referencedRelation: "emails"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emails: {
+        Row: {
+          campaign_id: string | null
+          created_at: string
+          html_body: string
+          id: string
+          org_id: string
+          retry_count: number
+          sent_at: string | null
+          status: Database["public"]["Enums"]["email_status"]
+          subject: string
+          to_email: string
+          to_name: string | null
+          user_id: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_at?: string
+          html_body: string
+          id?: string
+          org_id: string
+          retry_count?: number
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["email_status"]
+          subject: string
+          to_email: string
+          to_name?: string | null
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string | null
+          created_at?: string
+          html_body?: string
+          id?: string
+          org_id?: string
+          retry_count?: number
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["email_status"]
+          subject?: string
+          to_email?: string
+          to_name?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emails_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emails_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          org_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id: string
+          org_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          org_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recipient_lists: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          email: string
+          extra_fields: Json
+          id: string
+          name: string | null
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          email: string
+          extra_fields?: Json
+          id?: string
+          name?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          email?: string
+          extra_fields?: Json
+          id?: string
+          name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recipient_lists_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      smtp_accounts: {
+        Row: {
+          created_at: string
+          encrypted_password: string
+          from_email: string
+          from_name: string
+          host: string
+          id: string
+          is_active: boolean
+          org_id: string
+          port: number
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          encrypted_password: string
+          from_email: string
+          from_name: string
+          host: string
+          id?: string
+          is_active?: boolean
+          org_id: string
+          port?: number
+          username: string
+        }
+        Update: {
+          created_at?: string
+          encrypted_password?: string
+          from_email?: string
+          from_name?: string
+          host?: string
+          id?: string
+          is_active?: boolean
+          org_id?: string
+          port?: number
+          username?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "smtp_accounts_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      templates: {
+        Row: {
+          created_at: string
+          html_body: string
+          id: string
+          name: string
+          org_id: string
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          html_body: string
+          id?: string
+          name: string
+          org_id: string
+          subject: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          html_body?: string
+          id?: string
+          name?: string
+          org_id?: string
+          subject?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "templates_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      current_org_id: { Args: never; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      campaign_status: "draft" | "scheduled" | "running" | "completed"
+      email_log_event: "queued" | "sent" | "failed" | "retried"
+      email_status: "draft" | "pending" | "sent" | "failed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +487,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      campaign_status: ["draft", "scheduled", "running", "completed"],
+      email_log_event: ["queued", "sent", "failed", "retried"],
+      email_status: ["draft", "pending", "sent", "failed"],
+    },
   },
 } as const
